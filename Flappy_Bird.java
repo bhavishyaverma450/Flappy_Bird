@@ -1,7 +1,11 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
-public class Flappy_Bird extends JPanel {
+public class Flappy_Bird extends JPanel implements ActionListener, KeyListener {
 
     int boardWidth = 360;
     int boardHeight = 640;
@@ -13,6 +17,10 @@ public class Flappy_Bird extends JPanel {
     Image bottomPipe;
 
     Bird bird;
+    int velocityY = 0;
+    int gravity = 1;
+
+    Timer gameLoop;
 
     class Bird {
         int x, y, width, height;
@@ -27,9 +35,11 @@ public class Flappy_Bird extends JPanel {
         }
     }
 
-    // Constructor
     public Flappy_Bird() {
-        setPreferredSize(new Dimension(boardWidth, boardHeight)); // Required for pack()
+        setPreferredSize(new Dimension(boardWidth, boardHeight));
+
+        setFocusable(true);
+        addKeyListener(this);
 
         // Images
         birdImg = new ImageIcon("flappybird.png").getImage();
@@ -43,6 +53,9 @@ public class Flappy_Bird extends JPanel {
         int birdW = 34;
         int birdH = 24;
         bird = new Bird(birdImg, birdX, birdY, birdW, birdH);
+
+        gameLoop = new Timer(1000 / 60, this);
+        gameLoop.start();
     }
 
     @Override
@@ -51,9 +64,39 @@ public class Flappy_Bird extends JPanel {
         draw(g);
     }
 
+    public void move() {
+        // bird
+        velocityY += gravity;
+        bird.y += velocityY;
+        bird.y = Math.max(bird.y, 0);
+    }
+
     public void draw(Graphics g) {
         g.drawImage(bgImg, 0, 0, boardWidth, boardHeight, null);
         g.drawImage(bird.img, bird.x, bird.y, bird.width, bird.height, null);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        move();
+        repaint();
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+        if (e.getKeyCode() == KeyEvent.VK_SPACE) {
+            velocityY = -9;
+        }
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+
     }
 
 }

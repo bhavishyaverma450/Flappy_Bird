@@ -15,6 +15,7 @@ public class App {
         frame.add(fp);
         frame.pack();// if this is not used then it will count the size of the bar where flappy bird
                      // is written in the height and width
+        fp.requestFocus();
         frame.setVisible(true);
 
     }
